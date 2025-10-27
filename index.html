@@ -148,12 +148,20 @@
                         <span class="mr-2">📋</span>
                         Danh Sách Lịch Thi
                     </h2>
-                    <button 
-                        onclick="exportToPrint()" 
-                        class="px-6 py-2 bg-gradient-to-r from-green-400 to-blue-400 text-white rounded-xl font-medium btn-hover transition-all duration-200 flex items-center"
-                    >
-                        🖨️ Xuất Màn Hình
-                    </button>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <button 
+                            onclick="exportToPrint()" 
+                            class="px-6 py-2 bg-gradient-to-r from-green-400 to-blue-400 text-white rounded-xl font-medium btn-hover transition-all duration-200 flex items-center justify-center"
+                        >
+                            🖨️ Xuất Màn Hình
+                        </button>
+                        <button 
+                            onclick="exportToMobileImage()" 
+                            class="px-6 py-2 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-xl font-medium btn-hover transition-all duration-200 flex items-center justify-center"
+                        >
+                            📱 Xuất Ảnh Mobile
+                        </button>
+                    </div>
                 </div>
                 
                 <div id="examList" class="space-y-4">
@@ -348,6 +356,227 @@
             showNotification('📄 Đã mở cửa sổ xuất màn hình!');
         }
 
+        // Xuất ảnh cho mobile
+        function exportToMobileImage() {
+            if (exams.length === 0) {
+                showNotification('⚠️ Chưa có lịch thi nào để xuất!');
+                return;
+            }
+
+            // Tạo nội dung mobile
+            const mobileContent = generateMobileContent();
+            
+            // Tạo cửa sổ mới với kích thước mobile
+            const mobileWindow = window.open('', '_blank', 'width=375,height=812');
+            mobileWindow.document.write(mobileContent);
+            mobileWindow.document.close();
+            
+            showNotification('📱 Đã mở cửa sổ xuất ảnh mobile!');
+        }
+
+        // Tạo nội dung mobile
+        function generateMobileContent() {
+            const sortedExams = [...exams].sort((a, b) => {
+                const dateTimeA = new Date(`${a.date}T${a.time}`);
+                const dateTimeB = new Date(`${b.date}T${b.time}`);
+                return dateTimeA - dateTimeB;
+            });
+
+            const examCards = sortedExams.map((exam, index) => {
+                const examDate = new Date(`${exam.date}T${exam.time}`);
+                const now = new Date();
+                const status = examDate > now ? 'Sắp tới' : examDate < now ? 'Đã qua' : 'Hôm nay';
+                const statusColor = status === 'Sắp tới' ? '#10b981' : status === 'Đã qua' ? '#6b7280' : '#f59e0b';
+                const statusBg = status === 'Sắp tới' ? '#dcfce7' : status === 'Đã qua' ? '#f3f4f6' : '#fef3c7';
+                
+                return `
+                    <div style="background: linear-gradient(135deg, #fdf2f8, #f3e8ff); border-radius: 16px; padding: 16px; margin-bottom: 12px; border: 1px solid #e879f9; box-shadow: 0 2px 8px rgba(232, 121, 249, 0.1);">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                            <h3 style="margin: 0; font-size: 16px; font-weight: 600; color: #7c3aed; flex: 1;">${exam.subject}</h3>
+                            <span style="background: ${statusBg}; color: ${statusColor}; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; white-space: nowrap; margin-left: 8px;">${status}</span>
+                        </div>
+                        <div style="display: grid; gap: 8px;">
+                            <div style="display: flex; align-items: center; font-size: 14px; color: #7c3aed;">
+                                <span style="margin-right: 8px;">📅</span>
+                                <span>${formatDateShort(exam.date)}</span>
+                            </div>
+                            <div style="display: flex; align-items: center; font-size: 14px; color: #7c3aed;">
+                                <span style="margin-right: 8px;">🕐</span>
+                                <span style="font-weight: 600;">${exam.time}</span>
+                            </div>
+                            <div style="display: flex; align-items: center; font-size: 14px; color: #7c3aed;">
+                                <span style="margin-right: 8px;">🏫</span>
+                                <span>Phòng ${exam.room}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            return `
+                <!DOCTYPE html>
+                <html lang="vi">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Lịch Thi Mobile</title>
+                    <style>
+                        * {
+                            margin: 0;
+                            padding: 0;
+                            box-sizing: border-box;
+                        }
+                        body {
+                            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                            background: linear-gradient(135deg, #fef7ff 0%, #f0f9ff 50%, #f0fdf4 100%);
+                            padding: 16px;
+                            min-height: 100vh;
+                            color: #333;
+                            line-height: 1.5;
+                        }
+                        .header {
+                            text-align: center;
+                            margin-bottom: 20px;
+                            padding: 20px 16px;
+                            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+                            border-radius: 20px;
+                            color: white;
+                            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+                        }
+                        .header h1 {
+                            font-size: 20px;
+                            font-weight: bold;
+                            margin-bottom: 8px;
+                        }
+                        .header p {
+                            font-size: 13px;
+                            opacity: 0.9;
+                        }
+                        .info {
+                            display: flex;
+                            justify-content: space-between;
+                            margin-bottom: 16px;
+                            font-size: 12px;
+                            color: #6b7280;
+                            background: white;
+                            padding: 12px;
+                            border-radius: 12px;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                        }
+                        .exam-list {
+                            margin-bottom: 20px;
+                        }
+                        .footer {
+                            text-align: center;
+                            font-size: 11px;
+                            color: #9ca3af;
+                            background: white;
+                            padding: 16px;
+                            border-radius: 12px;
+                            margin-top: 20px;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                        }
+                        .footer p {
+                            margin-bottom: 4px;
+                        }
+                        .screenshot-btn {
+                            position: fixed;
+                            bottom: 20px;
+                            right: 20px;
+                            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+                            color: white;
+                            border: none;
+                            padding: 12px 16px;
+                            border-radius: 50px;
+                            font-size: 14px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+                            z-index: 1000;
+                        }
+                        .screenshot-btn:hover {
+                            transform: translateY(-2px);
+                            box-shadow: 0 6px 16px rgba(236, 72, 153, 0.4);
+                        }
+                        @media print {
+                            .screenshot-btn { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>📚 LỊCH THI - KIỂM TRA</h1>
+                        <p>Danh sách lịch thi phiên bản mobile</p>
+                    </div>
+                    
+                    <div class="info">
+                        <span>📅 ${new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
+                        <span>📊 ${exams.length} lịch thi</span>
+                    </div>
+
+                    <div class="exam-list">
+                        ${examCards}
+                    </div>
+
+                    <div class="footer">
+                        <p>🎓 Hệ thống quản lý lịch thi</p>
+                        <p>${new Date().toLocaleString('vi-VN')}</p>
+                    </div>
+
+                    <button class="screenshot-btn" onclick="takeScreenshot()">
+                        📸 Chụp Ảnh
+                    </button>
+
+                    <script>
+                        function takeScreenshot() {
+                            // Ẩn nút chụp ảnh
+                            document.querySelector('.screenshot-btn').style.display = 'none';
+                            
+                            // Hiển thị hướng dẫn
+                            const instruction = document.createElement('div');
+                            instruction.style.cssText = \`
+                                position: fixed;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%);
+                                background: rgba(0,0,0,0.9);
+                                color: white;
+                                padding: 20px;
+                                border-radius: 12px;
+                                text-align: center;
+                                z-index: 2000;
+                                font-size: 14px;
+                                max-width: 280px;
+                            \`;
+                            instruction.innerHTML = \`
+                                <div style="font-size: 24px; margin-bottom: 12px;">📱</div>
+                                <p style="margin-bottom: 12px;"><strong>Cách chụp ảnh màn hình:</strong></p>
+                                <p style="margin-bottom: 8px;">• iPhone: Nhấn nút Home + Power</p>
+                                <p style="margin-bottom: 8px;">• Android: Nhấn Volume Down + Power</p>
+                                <p style="margin-bottom: 16px;">• Hoặc dùng chức năng chụp màn hình của trình duyệt</p>
+                                <button onclick="this.parentElement.remove(); document.querySelector('.screenshot-btn').style.display = 'block';" 
+                                        style="background: #8b5cf6; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">
+                                    Đã hiểu
+                                </button>
+                            \`;
+                            document.body.appendChild(instruction);
+                        }
+                    </script>
+                <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99528d8663eb9626',t:'MTc2MTU3MTg3Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+                </html>
+            `;
+        }
+
+        // Format ngày ngắn cho mobile
+        function formatDateShort(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('vi-VN', {
+                weekday: 'short',
+                day: '2-digit',
+                month: '2-digit'
+            });
+        }
+
         // Tạo nội dung để in
         function generatePrintContent() {
             const sortedExams = [...exams].sort((a, b) => {
@@ -500,4 +729,4 @@
         renderExamList();
     </script>
 </</body>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'995249b92053a8d8',t:'MTc2MTU2OTEwMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></html>
+</html>
