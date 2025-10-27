@@ -37,6 +37,10 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        .delete-confirm {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        }
     </style>
 </head>
 <body class="pastel-bg min-h-full">
@@ -67,11 +71,10 @@
                 
                 <form id="examForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="subject" class="block text-sm font-medium text-purple-600 mb-2">Môn Kiểm Tra</label>
+                        <label for="subjectSelect" class="block text-sm font-medium text-purple-600 mb-2">Môn Kiểm Tra</label>
                         <select 
                             id="subjectSelect" 
-                            class="w-full px-4 py-3 border border-purple-200 rounded-xl input-focus transition-all duration-200 bg-purple-50"
-                            onchange="handleSubjectChange()"
+                            class="w-full px-4 py-3 border border-purple-200 rounded-xl input-focus transition-all duration-200 bg-white"
                             required
                         >
                             <option value="">-- Chọn môn học --</option>
@@ -89,51 +92,69 @@
                         <input 
                             type="text" 
                             id="customSubject" 
-                            name="subject"
-                            class="w-full px-4 py-3 border border-purple-200 rounded-xl input-focus transition-all duration-200 bg-purple-50 mt-3 hidden"
-                            placeholder="Nhập tên môn học khác..."
+                            placeholder="Nhập tên môn học"
+                            class="w-full px-4 py-3 border border-purple-200 rounded-xl input-focus transition-all duration-200 bg-white mt-2 hidden"
                         >
                     </div>
-                    
+
                     <div>
-                        <label for="room" class="block text-sm font-medium text-purple-600 mb-2">Phòng Kiểm Tra</label>
-                        <input 
-                            type="text" 
-                            id="room" 
-                            name="room"
-                            class="w-full px-4 py-3 border border-purple-200 rounded-xl input-focus transition-all duration-200 bg-purple-50"
-                            placeholder="Ví dụ: A101, B205..."
+                        <label for="examType" class="block text-sm font-medium text-purple-600 mb-2">Loại Kiểm Tra</label>
+                        <select 
+                            id="examType" 
+                            class="w-full px-4 py-3 border border-purple-200 rounded-xl input-focus transition-all duration-200 bg-white"
                             required
                         >
+                            <option value="">-- Chọn loại --</option>
+                            <option value="Kiểm tra 15 phút">⏱️ Kiểm tra 15 phút</option>
+                            <option value="Kiểm tra giữa kỳ">📋 Kiểm tra giữa kỳ</option>
+                            <option value="Kiểm tra cuối kỳ">📊 Kiểm tra cuối kỳ</option>
+                        </select>
                     </div>
-                    
+
                     <div>
-                        <label for="date" class="block text-sm font-medium text-purple-600 mb-2">Ngày Kiểm Tra</label>
+                        <label for="examDate" class="block text-sm font-medium text-purple-600 mb-2">Ngày Thi</label>
                         <input 
                             type="date" 
-                            id="date" 
-                            name="date"
-                            class="w-full px-4 py-3 border border-purple-200 rounded-xl input-focus transition-all duration-200 bg-purple-50"
+                            id="examDate" 
+                            class="w-full px-4 py-3 border border-purple-200 rounded-xl input-focus transition-all duration-200 bg-white"
                             required
                         >
                     </div>
-                    
+
                     <div>
-                        <label for="time" class="block text-sm font-medium text-purple-600 mb-2">Giờ Kiểm Tra</label>
+                        <label for="examTime" class="block text-sm font-medium text-purple-600 mb-2">Giờ Thi</label>
                         <input 
                             type="time" 
-                            id="time" 
-                            name="time"
-                            class="w-full px-4 py-3 border border-purple-200 rounded-xl input-focus transition-all duration-200 bg-purple-50"
-                            placeholder="Nhập giờ kiểm tra"
+                            id="examTime" 
+                            class="w-full px-4 py-3 border border-purple-200 rounded-xl input-focus transition-all duration-200 bg-white"
                             required
                         >
                     </div>
-                    
+
+                    <div>
+                        <label for="examRoom" class="block text-sm font-medium text-purple-600 mb-2">Phòng Thi</label>
+                        <input 
+                            type="text" 
+                            id="examRoom" 
+                            placeholder="Ví dụ: A101, B205, Phòng máy tính..."
+                            class="w-full px-4 py-3 border border-purple-200 rounded-xl input-focus transition-all duration-200 bg-white"
+                        >
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label for="notes" class="block text-sm font-medium text-purple-600 mb-2">Ghi Chú</label>
+                        <textarea 
+                            id="notes" 
+                            rows="3" 
+                            placeholder="Ví dụ: Ôn chương 1-3, mang máy tính..."
+                            class="w-full px-4 py-3 border border-purple-200 rounded-xl input-focus transition-all duration-200 bg-white resize-none"
+                        ></textarea>
+                    </div>
+
                     <div class="md:col-span-2">
                         <button 
                             type="submit" 
-                            class="w-full md:w-auto px-8 py-3 bg-gradient-to-r from-purple-400 to-blue-400 text-white rounded-xl font-medium btn-hover transition-all duration-200"
+                            class="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 px-6 rounded-xl font-medium btn-hover transition-all duration-200"
                         >
                             ✨ Thêm Lịch Thi
                         </button>
@@ -142,24 +163,29 @@
             </div>
 
             <!-- Danh sách lịch thi -->
-            <div class="bg-gradient-to-br from-blue-50 to-green-50 rounded-2xl card-shadow p-6 border border-blue-100">
-                <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
-                    <h2 class="text-xl font-medium text-blue-700 flex items-center mb-4 md:mb-0">
-                        <span class="mr-2">📋</span>
+            <div class="bg-white rounded-2xl card-shadow p-6 border border-purple-100">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-medium text-purple-700 flex items-center">
+                        <span class="mr-2">📅</span>
                         Danh Sách Lịch Thi
                     </h2>
-                    <button 
-                        onclick="exportToPrint()" 
-                        class="px-6 py-2 bg-gradient-to-r from-green-400 to-blue-400 text-white rounded-xl font-medium btn-hover transition-all duration-200 flex items-center"
-                    >
-                        🖨️ Xuất Màn Hình
-                    </button>
+                    <div class="flex items-center gap-3">
+                        <button 
+                            id="saveImageBtn"
+                            onclick="saveAsImage()"
+                            class="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-medium btn-hover transition-all duration-200 flex items-center text-sm"
+                        >
+                            📸 Lưu Ảnh
+                        </button>
+                        <span id="examCount" class="text-sm text-purple-500 font-medium">0 lịch thi</span>
+                    </div>
                 </div>
                 
                 <div id="examList" class="space-y-4">
-                    <div class="text-center py-8 text-slate-400">
-                        <div class="text-4xl mb-2">📝</div>
-                        <p>Chưa có lịch thi nào. Hãy thêm lịch thi đầu tiên!</p>
+                    <div class="text-center py-12 text-purple-400">
+                        <div class="text-6xl mb-4">📭</div>
+                        <p class="text-lg">Chưa có lịch thi nào</p>
+                        <p class="text-sm mt-2">Thêm lịch thi đầu tiên của bạn!</p>
                     </div>
                 </div>
             </div>
@@ -167,121 +193,143 @@
     </div>
 
     <script>
-        let exams = [];
-        let examIdCounter = 1;
+        let exams = JSON.parse(localStorage.getItem('exams')) || [];
+        let editingId = null;
 
-        // Lấy các phần tử DOM
-        const examForm = document.getElementById('examForm');
-        const examList = document.getElementById('examList');
-
-        // Xử lý thay đổi môn học
-        function handleSubjectChange() {
-            const subjectSelect = document.getElementById('subjectSelect');
-            const customSubject = document.getElementById('customSubject');
-            
-            if (subjectSelect.value === 'other') {
-                customSubject.classList.remove('hidden');
-                customSubject.required = true;
-                subjectSelect.removeAttribute('name');
+        document.getElementById('subjectSelect').addEventListener('change', function() {
+            const customInput = document.getElementById('customSubject');
+            if (this.value === 'other') {
+                customInput.classList.remove('hidden');
+                customInput.required = true;
             } else {
-                customSubject.classList.add('hidden');
-                customSubject.required = false;
-                customSubject.value = '';
-                subjectSelect.setAttribute('name', 'subject');
+                customInput.classList.add('hidden');
+                customInput.required = false;
+                customInput.value = '';
             }
-        }
-
-        // Xử lý form submit
-        examForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(examForm);
-            const subjectSelect = document.getElementById('subjectSelect');
-            const customSubject = document.getElementById('customSubject');
-            
-            let subjectValue;
-            if (subjectSelect.value === 'other') {
-                subjectValue = customSubject.value;
-            } else {
-                subjectValue = subjectSelect.value;
-            }
-            
-            const exam = {
-                id: examIdCounter++,
-                subject: subjectValue,
-                room: formData.get('room'),
-                date: formData.get('date'),
-                time: formData.get('time')
-            };
-            
-            exams.push(exam);
-            renderExamList();
-            examForm.reset();
-            
-            // Reset trạng thái form
-            document.getElementById('customSubject').classList.add('hidden');
-            document.getElementById('customSubject').required = false;
-            document.getElementById('subjectSelect').setAttribute('name', 'subject');
-            
-            // Hiển thị thông báo thành công
-            showNotification('✅ Đã thêm lịch thi thành công!');
         });
 
-        // Render danh sách lịch thi
-        function renderExamList() {
+        document.getElementById('examForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const subjectSelect = document.getElementById('subjectSelect').value;
+            const customSubject = document.getElementById('customSubject').value;
+            const subject = subjectSelect === 'other' ? customSubject : subjectSelect;
+            const examType = document.getElementById('examType').value;
+            const examDate = document.getElementById('examDate').value;
+            const examTime = document.getElementById('examTime').value;
+            const examRoom = document.getElementById('examRoom').value;
+            const notes = document.getElementById('notes').value;
+
+            if (editingId !== null) {
+                const index = exams.findIndex(exam => exam.id === editingId);
+                exams[index] = {
+                    id: editingId,
+                    subject,
+                    examType,
+                    examDate,
+                    examTime,
+                    examRoom,
+                    notes
+                };
+                editingId = null;
+            } else {
+                const exam = {
+                    id: Date.now(),
+                    subject,
+                    examType,
+                    examDate,
+                    examTime,
+                    examRoom,
+                    notes
+                };
+                exams.push(exam);
+            }
+
+            localStorage.setItem('exams', JSON.stringify(exams));
+            this.reset();
+            document.getElementById('customSubject').classList.add('hidden');
+            renderExams();
+        });
+
+        function renderExams() {
+            const examList = document.getElementById('examList');
+            const examCount = document.getElementById('examCount');
+            
             if (exams.length === 0) {
                 examList.innerHTML = `
-                    <div class="text-center py-8 text-slate-400">
-                        <div class="text-4xl mb-2">📝</div>
-                        <p>Chưa có lịch thi nào. Hãy thêm lịch thi đầu tiên!</p>
+                    <div class="text-center py-12 text-purple-400">
+                        <div class="text-6xl mb-4">📭</div>
+                        <p class="text-lg">Chưa có lịch thi nào</p>
+                        <p class="text-sm mt-2">Thêm lịch thi đầu tiên của bạn!</p>
                     </div>
                 `;
+                examCount.textContent = '0 lịch thi';
                 return;
             }
 
-            // Sắp xếp theo ngày và giờ
-            const sortedExams = [...exams].sort((a, b) => {
-                const dateTimeA = new Date(`${a.date}T${a.time}`);
-                const dateTimeB = new Date(`${b.date}T${b.time}`);
-                return dateTimeA - dateTimeB;
+            exams.sort((a, b) => {
+                const dateA = new Date(a.examDate + ' ' + a.examTime);
+                const dateB = new Date(b.examDate + ' ' + b.examTime);
+                return dateA - dateB;
             });
 
-            examList.innerHTML = sortedExams.map(exam => {
-                const examDate = new Date(`${exam.date}T${exam.time}`);
+            examCount.textContent = `${exams.length} lịch thi`;
+            
+            examList.innerHTML = exams.map(exam => {
+                const examDateTime = new Date(exam.examDate + ' ' + exam.examTime);
                 const now = new Date();
-                const isUpcoming = examDate > now;
-                const isPast = examDate < now;
+                const isPast = examDateTime < now;
+                const daysUntil = Math.ceil((examDateTime - now) / (1000 * 60 * 60 * 24));
                 
+                let urgencyClass = 'from-purple-50 to-blue-50 border-purple-200';
+                let urgencyBadge = '';
+                
+                if (!isPast) {
+                    if (daysUntil <= 1) {
+                        urgencyClass = 'from-red-50 to-orange-50 border-red-200';
+                        urgencyBadge = '<span class="text-xs bg-red-500 text-white px-2 py-1 rounded-full">🔥 Gấp</span>';
+                    } else {
+                        urgencyClass = 'from-blue-50 to-green-50 border-blue-200';
+                        urgencyBadge = '<span class="text-xs bg-blue-500 text-white px-2 py-1 rounded-full">📅 Sắp tới</span>';
+                    }
+                } else {
+                    urgencyClass = 'from-gray-50 to-gray-100 border-gray-200 opacity-60';
+                    urgencyBadge = '<span class="text-xs bg-gray-400 text-white px-2 py-1 rounded-full">✓ Đã qua</span>';
+                }
+
+                const formattedDate = new Date(exam.examDate).toLocaleDateString('vi-VN', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
                 return `
-                    <div class="exam-card bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl p-4 border border-pink-100 fade-in ${isPast ? 'opacity-60' : ''}">
-                        <div class="flex flex-col md:flex-row md:items-center justify-between">
+                    <div class="bg-gradient-to-br ${urgencyClass} rounded-xl p-5 border fade-in" id="exam-${exam.id}">
+                        <div class="flex justify-between items-start mb-3">
                             <div class="flex-1">
-                                <div class="flex items-center mb-2">
-                                    <span class="text-lg font-medium text-purple-700">${exam.subject}</span>
-                                    ${isUpcoming ? '<span class="ml-2 px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Sắp tới</span>' : ''}
-                                    ${isPast ? '<span class="ml-2 px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">Đã qua</span>' : ''}
+                                <div class="flex items-center gap-2 mb-2">
+                                    <h3 class="text-lg font-semibold text-purple-700">${exam.subject}</h3>
+                                    ${urgencyBadge}
                                 </div>
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-purple-600">
-                                    <div class="flex items-center">
-                                        <span class="mr-2">📅</span>
-                                        ${formatDate(exam.date)}
-                                    </div>
-                                    <div class="flex items-center">
-                                        <span class="mr-2">🕐</span>
-                                        ${exam.time}
-                                    </div>
-                                    <div class="flex items-center">
-                                        <span class="mr-2">🏫</span>
-                                        Phòng ${exam.room}
-                                    </div>
-                                </div>
+                                <p class="text-sm text-purple-600 mb-1">${exam.examType}</p>
+                                <p class="text-sm text-gray-600">📅 ${formattedDate}</p>
+                                <p class="text-sm text-gray-600">🕐 ${exam.examTime}</p>
+                                ${exam.examRoom ? `<p class="text-sm text-gray-600">🏫 ${exam.examRoom}</p>` : ''}
+                                ${exam.notes ? `<p class="text-sm text-gray-700 mt-2 bg-white bg-opacity-50 p-2 rounded-lg">📝 ${exam.notes}</p>` : ''}
                             </div>
-                            <div class="mt-3 md:mt-0 md:ml-4">
+                            <div class="flex gap-2">
+                                <button 
+                                    onclick="editExam(${exam.id})" 
+                                    class="px-3 py-2 bg-blue-500 text-white rounded-lg text-sm btn-hover transition-all duration-200"
+                                >
+                                    ✏️
+                                </button>
                                 <button 
                                     onclick="deleteExam(${exam.id})" 
-                                    class="px-4 py-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors duration-200 text-sm"
+                                    class="px-3 py-2 bg-red-500 text-white rounded-lg text-sm btn-hover transition-all duration-200"
                                 >
-                                    🗑️ Xóa
+                                    🗑️
                                 </button>
                             </div>
                         </div>
@@ -290,214 +338,227 @@
             }).join('');
         }
 
-        // Xóa lịch thi
-        function deleteExam(id) {
-            exams = exams.filter(exam => exam.id !== id);
-            renderExamList();
-            showNotification('🗑️ Đã xóa lịch thi');
-        }
+        function editExam(id) {
+            const exam = exams.find(e => e.id === id);
+            if (!exam) return;
 
-        // Format ngày
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('vi-VN', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-        }
-
-        // Hiển thị thông báo
-        function showNotification(message) {
-            const notification = document.createElement('div');
-            notification.className = 'fixed top-4 right-4 bg-gradient-to-r from-purple-100 to-pink-100 border border-purple-200 rounded-xl px-6 py-3 card-shadow z-50 fade-in text-purple-700';
-            notification.textContent = message;
+            editingId = id;
             
-            document.body.appendChild(notification);
+            const subjectOptions = Array.from(document.getElementById('subjectSelect').options);
+            const matchingOption = subjectOptions.find(opt => opt.value === exam.subject);
             
-            setTimeout(() => {
-                notification.style.opacity = '0';
-                notification.style.transform = 'translateY(-10px)';
-                setTimeout(() => {
-                    document.body.removeChild(notification);
-                }, 300);
-            }, 2000);
-        }
-
-        // Xuất màn hình
-        function exportToPrint() {
-            if (exams.length === 0) {
-                showNotification('⚠️ Chưa có lịch thi nào để xuất!');
-                return;
+            if (matchingOption) {
+                document.getElementById('subjectSelect').value = exam.subject;
+                document.getElementById('customSubject').classList.add('hidden');
+            } else {
+                document.getElementById('subjectSelect').value = 'other';
+                document.getElementById('customSubject').classList.remove('hidden');
+                document.getElementById('customSubject').value = exam.subject;
             }
+            
+            document.getElementById('examType').value = exam.examType;
+            document.getElementById('examDate').value = exam.examDate;
+            document.getElementById('examTime').value = exam.examTime;
+            document.getElementById('examRoom').value = exam.examRoom || '';
+            document.getElementById('notes').value = exam.notes;
 
-            // Tạo nội dung để in
-            const printContent = generatePrintContent();
-            
-            // Tạo cửa sổ mới để in
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(printContent);
-            printWindow.document.close();
-            
-            // Tự động mở hộp thoại in
-            printWindow.onload = function() {
-                printWindow.print();
-            };
-            
-            showNotification('📄 Đã mở cửa sổ xuất màn hình!');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Tạo nội dung để in
-        function generatePrintContent() {
-            const sortedExams = [...exams].sort((a, b) => {
-                const dateTimeA = new Date(`${a.date}T${a.time}`);
-                const dateTimeB = new Date(`${b.date}T${b.time}`);
-                return dateTimeA - dateTimeB;
-            });
-
-            const examRows = sortedExams.map((exam, index) => {
-                const examDate = new Date(`${exam.date}T${exam.time}`);
-                const now = new Date();
-                const status = examDate > now ? 'Sắp tới' : examDate < now ? 'Đã qua' : 'Hôm nay';
-                
-                return `
-                    <tr style="border-bottom: 1px solid #e5e7eb;">
-                        <td style="padding: 12px; text-align: center; font-weight: bold;">${index + 1}</td>
-                        <td style="padding: 12px; font-weight: 600;">${exam.subject}</td>
-                        <td style="padding: 12px; text-align: center;">${formatDate(exam.date)}</td>
-                        <td style="padding: 12px; text-align: center; font-weight: 600;">${exam.time}</td>
-                        <td style="padding: 12px; text-align: center;">${exam.room}</td>
-                        <td style="padding: 12px; text-align: center;">
-                            <span style="padding: 4px 8px; border-radius: 12px; font-size: 12px; 
-                                ${status === 'Sắp tới' ? 'background-color: #dcfce7; color: #166534;' : 
-                                  status === 'Đã qua' ? 'background-color: #f3f4f6; color: #6b7280;' : 
-                                  'background-color: #fef3c7; color: #92400e;'}">${status}</span>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-
-            return `
-                <!DOCTYPE html>
-                <html lang="vi">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Lịch Thi Kiểm Tra</title>
-                    <style>
-                        body {
-                            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                            margin: 20px;
-                            color: #333;
-                            line-height: 1.6;
-                        }
-                        .header {
-                            text-align: center;
-                            margin-bottom: 30px;
-                            border-bottom: 3px solid #8b5cf6;
-                            padding-bottom: 20px;
-                        }
-                        .header h1 {
-                            color: #8b5cf6;
-                            margin: 0;
-                            font-size: 28px;
-                            font-weight: bold;
-                        }
-                        .header p {
-                            color: #6b7280;
-                            margin: 10px 0 0 0;
-                            font-size: 16px;
-                        }
-                        .info {
-                            display: flex;
-                            justify-content: space-between;
-                            margin-bottom: 20px;
-                            font-size: 14px;
-                            color: #6b7280;
-                        }
-                        table {
-                            width: 100%;
-                            border-collapse: collapse;
-                            margin-top: 20px;
-                            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                        }
-                        th {
-                            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
-                            color: white;
-                            padding: 15px 12px;
-                            text-align: center;
-                            font-weight: 600;
-                            font-size: 14px;
-                        }
-                        td {
-                            font-size: 14px;
-                        }
-                        tr:nth-child(even) {
-                            background-color: #f8fafc;
-                        }
-                        tr:hover {
-                            background-color: #f1f5f9;
-                        }
-                        .footer {
-                            margin-top: 30px;
-                            text-align: center;
-                            font-size: 12px;
-                            color: #9ca3af;
-                            border-top: 1px solid #e5e7eb;
-                            padding-top: 20px;
-                        }
-                        @media print {
-                            body { margin: 0; }
-                            .header { page-break-inside: avoid; }
-                            table { page-break-inside: auto; }
-                            tr { page-break-inside: avoid; }
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>📚 LỊCH THI - KIỂM TRA</h1>
-                        <p>Danh sách lịch thi được xuất từ hệ thống quản lý</p>
+        function deleteExam(id) {
+            const examElement = document.getElementById(`exam-${id}`);
+            const originalContent = examElement.innerHTML;
+            
+            examElement.innerHTML = `
+                <div class="delete-confirm rounded-xl p-5 text-center">
+                    <p class="text-red-700 font-medium mb-4">Bạn có chắc muốn xóa lịch thi này?</p>
+                    <div class="flex gap-3 justify-center">
+                        <button 
+                            onclick="confirmDelete(${id})" 
+                            class="px-4 py-2 bg-red-500 text-white rounded-lg btn-hover transition-all duration-200"
+                        >
+                            Xác nhận xóa
+                        </button>
+                        <button 
+                            onclick="cancelDelete(${id}, \`${originalContent.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)" 
+                            class="px-4 py-2 bg-gray-500 text-white rounded-lg btn-hover transition-all duration-200"
+                        >
+                            Hủy
+                        </button>
                     </div>
-                    
-                    <div class="info">
-                        <span>📅 Ngày xuất: ${new Date().toLocaleDateString('vi-VN', {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                        })}</span>
-                        <span>📊 Tổng số lịch thi: ${exams.length}</span>
-                    </div>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="width: 8%;">STT</th>
-                                <th style="width: 25%;">Môn Kiểm Tra</th>
-                                <th style="width: 25%;">Ngày Thi</th>
-                                <th style="width: 12%;">Giờ Thi</th>
-                                <th style="width: 15%;">Phòng Thi</th>
-                                <th style="width: 15%;">Trạng Thái</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${examRows}
-                        </tbody>
-                    </table>
-
-                    <div class="footer">
-                        <p>🎓 Hệ thống quản lý lịch thi - Được tạo bởi Canva Code</p>
-                        <p>Thời gian xuất: ${new Date().toLocaleString('vi-VN')}</p>
-                    </div>
-                </body>
-                </html>
+                </div>
             `;
         }
 
-        // Khởi tạo
-        renderExamList();
+        function confirmDelete(id) {
+            exams = exams.filter(exam => exam.id !== id);
+            localStorage.setItem('exams', JSON.stringify(exams));
+            renderExams();
+        }
+
+        function cancelDelete(id, originalContent) {
+            const examElement = document.getElementById(`exam-${id}`);
+            examElement.innerHTML = originalContent;
+        }
+
+        function saveAsImage() {
+            const examListContainer = document.querySelector('.bg-white.rounded-2xl.card-shadow');
+            const saveBtn = document.getElementById('saveImageBtn');
+            
+            // Disable button and show loading
+            saveBtn.innerHTML = '⏳ Đang tạo...';
+            saveBtn.disabled = true;
+            
+            // Create canvas for image generation
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size for mobile wallpaper (9:16 ratio)
+            const isMobile = window.innerWidth <= 768;
+            canvas.width = isMobile ? 1080 : 1920;
+            canvas.height = isMobile ? 1920 : 1080;
+            
+            // Create gradient background
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#fef7ff');
+            gradient.addColorStop(0.5, '#f0f9ff');
+            gradient.addColorStop(1, '#f0fdf4');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Set up text styles
+            const titleSize = isMobile ? 48 : 64;
+            const subtitleSize = isMobile ? 24 : 32;
+            const itemSize = isMobile ? 20 : 24;
+            const smallSize = isMobile ? 16 : 18;
+            
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#7c3aed';
+            ctx.font = `bold ${titleSize}px system-ui, -apple-system, sans-serif`;
+            ctx.fillText('📚 LỊCH THI - KIỂM TRA', canvas.width / 2, isMobile ? 120 : 100);
+            
+            ctx.font = `${subtitleSize}px system-ui, -apple-system, sans-serif`;
+            ctx.fillStyle = '#a855f7';
+            ctx.fillText('Theo dõi và quản lý lịch thi', canvas.width / 2, isMobile ? 170 : 150);
+            
+            // Draw exams
+            if (exams.length === 0) {
+                ctx.font = `${itemSize}px system-ui, -apple-system, sans-serif`;
+                ctx.fillStyle = '#9ca3af';
+                ctx.fillText('📭 Chưa có lịch thi nào', canvas.width / 2, canvas.height / 2);
+                ctx.font = `${smallSize}px system-ui, -apple-system, sans-serif`;
+                ctx.fillText('Thêm lịch thi đầu tiên của bạn!', canvas.width / 2, canvas.height / 2 + 40);
+            } else {
+                // Sort exams by date
+                const sortedExams = [...exams].sort((a, b) => {
+                    const dateA = new Date(a.examDate + ' ' + a.examTime);
+                    const dateB = new Date(b.examDate + ' ' + b.examTime);
+                    return dateA - dateB;
+                });
+                
+                let yPos = isMobile ? 250 : 220;
+                const lineHeight = isMobile ? 80 : 90;
+                const maxExams = isMobile ? 18 : 10;
+                
+                sortedExams.slice(0, maxExams).forEach((exam, index) => {
+                    const examDateTime = new Date(exam.examDate + ' ' + exam.examTime);
+                    const now = new Date();
+                    const isPast = examDateTime < now;
+                    const daysUntil = Math.ceil((examDateTime - now) / (1000 * 60 * 60 * 24));
+                    
+                    // Determine status and color
+                    let statusText = '';
+                    let statusColor = '#7c3aed';
+                    
+                    if (!isPast) {
+                        if (daysUntil <= 1) {
+                            statusText = '🔥 GẤP';
+                            statusColor = '#dc2626';
+                        } else {
+                            statusText = '📅 SẮP TỚI';
+                            statusColor = '#2563eb';
+                        }
+                    } else {
+                        statusText = '✓ ĐÃ QUA';
+                        statusColor = '#6b7280';
+                    }
+                    
+                    // Draw exam card background
+                    const cardY = yPos - 25;
+                    const cardHeight = lineHeight - 10;
+                    const cardWidth = canvas.width * 0.9;
+                    const cardX = (canvas.width - cardWidth) / 2;
+                    
+                    // Card background with rounded corners effect
+                    ctx.fillStyle = isPast ? 'rgba(243, 244, 246, 0.8)' : 'rgba(255, 255, 255, 0.9)';
+                    ctx.fillRect(cardX, cardY, cardWidth, cardHeight);
+                    
+                    // Subject name
+                    ctx.textAlign = 'left';
+                    ctx.font = `bold ${itemSize}px system-ui, -apple-system, sans-serif`;
+                    ctx.fillStyle = statusColor;
+                    ctx.fillText(exam.subject, cardX + 20, yPos);
+                    
+                    // Status badge
+                    ctx.textAlign = 'right';
+                    ctx.font = `${smallSize}px system-ui, -apple-system, sans-serif`;
+                    ctx.fillText(statusText, cardX + cardWidth - 20, yPos);
+                    
+                    // Date and time
+                    ctx.textAlign = 'left';
+                    ctx.font = `${smallSize}px system-ui, -apple-system, sans-serif`;
+                    ctx.fillStyle = '#6b7280';
+                    
+                    const formattedDate = new Date(exam.examDate).toLocaleDateString('vi-VN', {
+                        weekday: 'short',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                    
+                    ctx.fillText(`📅 ${formattedDate} • 🕐 ${exam.examTime}`, cardX + 20, yPos + 20);
+                    
+                    // Room info
+                    if (exam.examRoom) {
+                        ctx.fillText(`🏫 ${exam.examRoom}`, cardX + 20, yPos + 40);
+                    }
+                    
+                    yPos += lineHeight;
+                });
+                
+                // Show "and more" if there are more exams
+                if (exams.length > maxExams) {
+                    ctx.textAlign = 'center';
+                    ctx.font = `${smallSize}px system-ui, -apple-system, sans-serif`;
+                    ctx.fillStyle = '#9ca3af';
+                    ctx.fillText(`... và ${exams.length - maxExams} lịch thi khác`, canvas.width / 2, yPos + 20);
+                }
+            }
+            
+            // Add footer
+            ctx.textAlign = 'center';
+            ctx.font = `${smallSize}px system-ui, -apple-system, sans-serif`;
+            ctx.fillStyle = '#9ca3af';
+            const footerY = canvas.height - (isMobile ? 60 : 40);
+            ctx.fillText(`Tạo lúc: ${new Date().toLocaleString('vi-VN')}`, canvas.width / 2, footerY);
+            
+            // Convert to blob and download
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `lich-thi-${new Date().toISOString().split('T')[0]}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                // Reset button
+                saveBtn.innerHTML = '📸 Lưu Ảnh';
+                saveBtn.disabled = false;
+            }, 'image/png', 0.9);
+        }
+
+        renderExams();
     </script>
-</</body>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'995287f4c3c69626',t:'MTc2MTU3MTY0OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></html>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9952b03b418c9626',t:'MTc2MTU3MzI5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
