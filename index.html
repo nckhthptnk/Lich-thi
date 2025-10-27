@@ -413,10 +413,9 @@
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             
-            // Set canvas size for mobile wallpaper (9:16 ratio)
-            const isMobile = window.innerWidth <= 768;
-            canvas.width = isMobile ? 1080 : 1920;
-            canvas.height = isMobile ? 1920 : 1080;
+            // Always use vertical layout for phone wallpaper (9:16 ratio)
+            canvas.width = 1080;
+            canvas.height = 1920;
             
             // Create gradient background
             const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
@@ -426,20 +425,20 @@
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // Set up text styles
-            const titleSize = isMobile ? 48 : 64;
-            const subtitleSize = isMobile ? 24 : 32;
-            const itemSize = isMobile ? 20 : 24;
-            const smallSize = isMobile ? 16 : 18;
+            // Set up text styles for vertical layout
+            const titleSize = 52;
+            const subtitleSize = 28;
+            const itemSize = 22;
+            const smallSize = 18;
             
             ctx.textAlign = 'center';
             ctx.fillStyle = '#7c3aed';
             ctx.font = `bold ${titleSize}px system-ui, -apple-system, sans-serif`;
-            ctx.fillText('📚 LỊCH THI - KIỂM TRA', canvas.width / 2, isMobile ? 120 : 100);
+            ctx.fillText('📚 LỊCH THI - KIỂM TRA', canvas.width / 2, 140);
             
             ctx.font = `${subtitleSize}px system-ui, -apple-system, sans-serif`;
             ctx.fillStyle = '#a855f7';
-            ctx.fillText('Theo dõi và quản lý lịch thi', canvas.width / 2, isMobile ? 170 : 150);
+            ctx.fillText('Theo dõi và quản lý lịch thi', canvas.width / 2, 190);
             
             // Draw exams
             if (exams.length === 0) {
@@ -456,9 +455,9 @@
                     return dateA - dateB;
                 });
                 
-                let yPos = isMobile ? 250 : 220;
-                const lineHeight = isMobile ? 80 : 90;
-                const maxExams = isMobile ? 18 : 10;
+                let yPos = 280;
+                const lineHeight = 85;
+                const maxExams = 18;
                 
                 sortedExams.slice(0, maxExams).forEach((exam, index) => {
                     const examDateTime = new Date(exam.examDate + ' ' + exam.examTime);
@@ -538,7 +537,7 @@
             ctx.textAlign = 'center';
             ctx.font = `${smallSize}px system-ui, -apple-system, sans-serif`;
             ctx.fillStyle = '#9ca3af';
-            const footerY = canvas.height - (isMobile ? 60 : 40);
+            const footerY = canvas.height - 80;
             ctx.fillText(`Tạo lúc: ${new Date().toLocaleString('vi-VN')}`, canvas.width / 2, footerY);
             
             // Convert to blob and download
@@ -560,5 +559,5 @@
 
         renderExams();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9952b03b418c9626',t:'MTc2MTU3MzI5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9952b6f5f08f9626',t:'MTc2MTU3MzU3NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
